@@ -1,14 +1,11 @@
+import os
 from typing import Optional, Type, List
 
-from langchain_core.callbacks import (
-    AsyncCallbackManagerForToolRun,
-    CallbackManagerForToolRun,
-)
-from langchain_core.tools import BaseTool
-from langchain_core.tools import BaseToolkit
 from pydantic import BaseModel, Field
 
-#doing this once for all tools
+from langchain_core.callbacks import CallbackManagerForToolRun
+from langchain_core.tools import BaseTool, BaseToolkit
+
 try:
             from swcpy import SWCClient
             from swcpy import SWCConfig
@@ -18,11 +15,12 @@ except ImportError:
         "swcpy is not installed. Please install it."
     )
 
-config = SWCConfig(url="http://0.0.0.0:8000",backoff=False)
+api_base_url = os.environ['API_BASE_URL']
+config = SWCConfig(url=api_base_url,backoff=False)
 local_swc_client = SWCClient(config)
 
-
 class HealthCheckInput(BaseModel):
+    """Empty input class for health check tool."""
     pass
 
 class HealthCheckTool(BaseTool):
@@ -37,9 +35,9 @@ class HealthCheckTool(BaseTool):
         """Use the tool to check if the API is running."""
         health_check_response = local_swc_client.get_health_check()
         return health_check_response.text
-    
 
 class LeaguesInput(BaseModel):
+    """Input class for List Leagues Tool"""
     league_name: Optional[str] = Field(default=None, description="league name. Leave blank or None to get all leagues.")
 
 class ListLeaguesTool(BaseTool):
@@ -52,11 +50,11 @@ class ListLeaguesTool(BaseTool):
         self, league_name: Optional[str] = None, run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> List[League]:
         """Use the tool to get a list of leagues from SportsWorldCentral."""
-        # Call the API with league_name, which could be None
         list_leagues_response = local_swc_client.list_leagues(league_name=league_name)
         return list_leagues_response
 
 class TeamsInput(BaseModel):
+    """Input class for List Teams tool."""
     team_name: Optional[str] = Field(default=None, description="Name of the team to search for. Leave blank or None to get all teams.")
     league_id: Optional[int] = Field(default=None, description="League ID from a league. You must provide a numerical League ID. Leave blank or None to get teams from all leagues.")
 
