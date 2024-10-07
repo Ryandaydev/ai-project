@@ -44,7 +44,7 @@ class LeaguesInput(BaseModel):
 
 class ListLeaguesTool(BaseTool):
     name: str = "ListLeagues"
-    description: str = "get a list of leagues from SportsWorldCentral"
+    description: str = "get a list of leagues from SportsWorldCentral. Leagues contain teams if they are present."
     args_schema: Type[LeaguesInput] = LeaguesInput
     return_direct: bool = False
 
@@ -62,14 +62,14 @@ class TeamsInput(BaseModel):
 
 class ListTeamsTool(BaseTool):
     name: str = "ListTeams"
-    description: str = "Get a list of teams from SportsWorldCentral. Provide a numerical League ID to filter teams from a specific league."
+    description: str = "Get a list of teams from SportsWorldCentral. Teams contain players if they are present. Optionally provide a numerical League ID to filter teams from a specific league."
     args_schema: Type[TeamsInput] = TeamsInput
     return_direct: bool = False
 
     def _run(
         self, team_name: Optional[str] = None, league_id: Optional[int] = None, run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> List[Team]:
-        """Use the tool to get a list of leagues from SportsWorldCentral."""
+        """Use the tool to get a list of teams from SportsWorldCentral."""
         list_teams_response = local_swc_client.list_teams(team_name=team_name, league_id= league_id)
         return list_teams_response
 
