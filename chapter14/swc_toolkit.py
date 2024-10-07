@@ -6,7 +6,6 @@ from pydantic import BaseModel, Field
 from langchain_core.callbacks import CallbackManagerForToolRun
 from langchain_core.tools import BaseTool, BaseToolkit
 
-#doing this once for all tools
 try:
             from swcpy import SWCClient
             from swcpy import SWCConfig
