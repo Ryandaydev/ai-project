@@ -1,10 +1,10 @@
 """Fantasy acquisition API"""
 
-from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi import FastAPI
 import onnxruntime as rt
 from fastapi import FastAPI
 import numpy as np
-from schemas import FantasyAcquistionFeatures, PredictionOutput
+from schemas import FantasyAcquisitionFeatures, PredictionOutput
 
 api_description = """
 This API predicts the range of costs to acquire a player in fantasy football
@@ -61,9 +61,11 @@ def root():
           operation_id="v0_predict",
           tags=["prediction"],
 )
-def predict(features: FantasyAcquistionFeatures):
+def predict(features: FantasyAcquisitionFeatures):
     # Convert Pydantic model to NumPy array
-    input_data = np.array([[features.waiver_value_tier, features.fantasy_regular_season_weeks_remaining, features.league_budget_pct_remaining]], dtype=np.int64)
+    input_data = np.array([[features.waiver_value_tier, 
+                            features.fantasy_regular_season_weeks_remaining, 
+                            features.league_budget_pct_remaining]], dtype=np.int64)
 
     # Perform ONNX inference
     pred_onx_10 = sess_10.run([label_name_10], {input_name_10: input_data})[0]
