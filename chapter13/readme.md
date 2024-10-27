@@ -1,1 +1,2 @@
-# Chapter 13 - Deploying a Machine Learning API
+# Chapter 13
+Deploying a Machine Learning API
