@@ -2,7 +2,6 @@
 
 from fastapi import FastAPI
 import onnxruntime as rt
-from fastapi import FastAPI
 import numpy as np
 from schemas import FantasyAcquisitionFeatures, PredictionOutput
 
