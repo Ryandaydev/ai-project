@@ -15,9 +15,7 @@ except ImportError:
         "swcpy is not installed. Please install it."
     )
 
-api_base_url = os.environ.get('SWC_API_BASE_URL', 'Environment variable not set')
-
-config = SWCConfig(url=api_base_url,backoff=False)
+config = SWCConfig(backoff=False)
 local_swc_client = SWCClient(config)
 
 
