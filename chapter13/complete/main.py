@@ -20,9 +20,12 @@ Get predictions of player acquisition cost.
 
 
 # Load the ONNX model
-sess_10 = rt.InferenceSession("acquisition_model_10.onnx", providers=["CPUExecutionProvider"])
-sess_50 = rt.InferenceSession("acquisition_model_50.onnx", providers=["CPUExecutionProvider"])
-sess_90 = rt.InferenceSession("acquisition_model_90.onnx", providers=["CPUExecutionProvider"])
+sess_10 = rt.InferenceSession("acquisition_model_10.onnx", 
+                              providers=["CPUExecutionProvider"])
+sess_50 = rt.InferenceSession("acquisition_model_50.onnx", 
+                              providers=["CPUExecutionProvider"])
+sess_90 = rt.InferenceSession("acquisition_model_90.onnx", 
+                              providers=["CPUExecutionProvider"])
 
 # Get the input and output names of the model
 input_name_10 = sess_10.get_inputs()[0].name
@@ -64,7 +67,8 @@ def predict(features: FantasyAcquisitionFeatures):
     # Convert Pydantic model to NumPy array
     input_data = np.array([[features.waiver_value_tier, 
                             features.fantasy_regular_season_weeks_remaining, 
-                            features.league_budget_pct_remaining]], dtype=np.int64)
+                            features.league_budget_pct_remaining]], 
+                            dtype=np.int64)
 
     # Perform ONNX inference
     pred_onx_10 = sess_10.run([label_name_10], {input_name_10: input_data})[0]
@@ -75,6 +79,9 @@ def predict(features: FantasyAcquisitionFeatures):
 
 
     # Return prediction as a Pydantic response model
-    return PredictionOutput(winning_bid_10th_percentile=round(float(pred_onx_10[0]),2),
-                            winning_bid_50th_percentile=round(float(pred_onx_50[0]),2),
-                            winning_bid_90th_percentile=round(float(pred_onx_90[0]), 2))
+    return PredictionOutput(winning_bid_10th_percentile=round(
+                                float(pred_onx_10[0]),2),
+                            winning_bid_50th_percentile=round(
+                                float(pred_onx_50[0]),2),
+                            winning_bid_90th_percentile=round(
+                                float(pred_onx_90[0]), 2))
